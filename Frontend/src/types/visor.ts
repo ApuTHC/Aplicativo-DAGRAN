@@ -8,5 +8,9 @@ export type itemsVisorCategoryType = {
     title: string;
     description: string;
     url: string;
+    urlFeat: string;
     legend: legendType[];
 }
+
+
+

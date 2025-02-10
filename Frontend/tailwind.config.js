@@ -13,6 +13,9 @@ export default {
         "secondary1": "#3561ab", 
         "secondary2": "#8FCAF0", 
       },
+      fontFamily: {
+        'promp': ['"Promp"', 'sans-serif'], // Si es Arial Black o una fuente personalizada
+      },
 
     },
   },
