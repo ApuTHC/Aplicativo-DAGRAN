@@ -4,6 +4,8 @@ import * as EsriLeaflet from "esri-leaflet";
 import "esri-leaflet-renderers";
 import * as EsriVectorLeaflet from "esri-leaflet-vector";
 // import * as EsriLegendLeaflet from "esri-leaflet-legend";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { categories, itemsVisorCategory } from "../../constants/visor";
 // import * as Locate from "leaflet.locatecontrol/dist/L.Control.Locate.min.js";
@@ -89,6 +91,7 @@ export const Visor = () => {
     legend: L.Layer | null;
     active: boolean;
     transp: number;
+    category: string;
     url: string;
     urlFeat: string;
     ToggleLayer: ToggleLayerType;
@@ -98,6 +101,7 @@ export const Visor = () => {
       legend: L.Layer | null,
       active: boolean,
       transp: number,
+      category: string,
       url: string,
       urlFeat: string,
       ToggleLayer: ToggleLayerType
@@ -106,6 +110,7 @@ export const Visor = () => {
       this.legend = null;
       this.active = active;
       this.transp = transp;
+      this.category = category;
       this.url = url;
       this.urlFeat = urlFeat;
       this.ToggleLayer = ToggleLayer;
@@ -128,9 +133,11 @@ export const Visor = () => {
     });
   };
 
-  const [currentCategory, setCurrentCategory] = useState<string>(categories[0]);
-  const [currentItem, setCurrentItem] = useState<string>("");
+  const [currentCategory, setCurrentCategory] = useState<string>(categories[1]);
+
   const [transps, setTranspas] = useState([
+    { transp: 100 },
+    { transp: 100 },
     { transp: 100 },
     { transp: 100 },
     { transp: 100 },
@@ -141,13 +148,31 @@ export const Visor = () => {
     { check: false },
     { check: false },
     { check: false },
+    { check: false },
+    { check: false },
   ]);
 
   const map = useRef<L.Map | null>(null);
   const itemsLayerMap = useRef<MapLayer[]>([]);
 
+  const [subregionGraph, setSubregionGraph] = useState<string>("Norte");
+  const [subregionArray, setSubregionArray] = useState<string[]>([
+    "Norte",
+    "Nordeste",
+    "Occidente",
+    "Oriente",
+    "Sureste",
+    "Bajo cauca",
+  ]);
+
   const [municipiosName, setMunicipiosName] = useState<string[]>([]);
   const [subregionesName, setSubregionesName] = useState<string[]>([]);
+  const [inventario, setInventario] = useState<
+    GeoJSON.FeatureCollection | undefined
+  >(undefined);
+  const [inventarioLayerCluster, setInventarioLayerCluster] = useState<
+    L.Layer | undefined
+  >(undefined);
 
   useEffect(() => {
     if (!map.current) {
@@ -161,10 +186,10 @@ export const Visor = () => {
       const customPane = map.current.getPane("customPane");
       const featPane = map.current.getPane("featPane");
       if (featPane) {
-        featPane.style.zIndex = "100"; // Asignación de zIndex como string
+        featPane.style.zIndex = "40"; // Asignación de zIndex como string
       }
       if (customPane) {
-        customPane.style.zIndex = "50"; // Asignación de zIndex como string
+        customPane.style.zIndex = "100"; // Asignación de zIndex como string
       }
       if (hillshadePane) {
         hillshadePane.style.zIndex = "0"; // Asignación de zIndex como string
@@ -217,7 +242,7 @@ export const Visor = () => {
         simplifyFactor: 0.9,
         precision: 5,
         renderer: L.canvas(),
-        pane: "featPane"
+        pane: "featPane",
       }).addTo(map.current);
 
       const municipiosNameAux: string[] = [];
@@ -230,6 +255,64 @@ export const Visor = () => {
         subregionesNameAux.push(feat.properties.REGION)
       );
       setSubregionesName(subregionesNameAux);
+
+      async function fetchFeatureServerGeoJSON(
+        url: string,
+        offset = 0,
+        recordCount = 2000
+      ) {
+        const features = [];
+        let hasMoreData = true;
+
+        while (hasMoreData) {
+          const queryUrl = `${url}/query?where=1%3D1&outFields=*&f=geojson&resultOffset=${offset}&resultRecordCount=${recordCount}`;
+          const response = await fetch(queryUrl);
+          const data = await response.json();
+
+          if (data.features && data.features.length > 0) {
+            features.push(...data.features);
+            offset += recordCount;
+          } else {
+            hasMoreData = false;
+          }
+        }
+
+        return { type: "FeatureCollection", features };
+      }
+
+      // Uso
+      const featureServerUrl =
+        "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Inventario_MenM_DAGRAN/FeatureServer/0";
+      fetchFeatureServerGeoJSON(featureServerUrl).then((geojson) => {
+        // console.log(geojson); // Agrega el GeoJSON al mapa o guárdalo
+        setInventario(geojson);
+        const markersCluster = new L.MarkerClusterGroup({
+          // spiderfyOnMaxZoom: false,
+          // disableClusteringAtZoom: 14,
+          clusterPane: "customPane",
+        });
+        for (const feature of geojson.features) {
+          L.geoJson(feature, {
+            pointToLayer: (feature, latlng) => {
+              return L.marker(latlng).bindPopup(
+                Object.keys(feature.properties)
+                  .map(function (k) {
+                    return k + ": " + feature.properties[k];
+                  })
+                  .join("<br />"),
+                {
+                  maxHeight: 200,
+                }
+              );
+            },
+            onEachFeature: (feature, layer) => {
+              markersCluster.addLayer(layer); // Añadir cada marcador al grupo de clústeres
+            },
+          });
+        }
+        setInventarioLayerCluster(markersCluster);
+        // map.current?.addLayer(markersCluster);
+      });
     }
     ToggleMapLayer();
   }, [checks]);
@@ -247,15 +330,15 @@ export const Visor = () => {
             null,
             false,
             1,
+            item.category,
             item.url,
             item.urlFeat,
             ToggleMapLayer
           )
         );
       });
-      setCurrentItem(itemsVisorCategory[0].title);
     }
-  });
+  }, [itemsVisorCategory]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
@@ -282,7 +365,7 @@ export const Visor = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   const [searchTermSub, setSearchTermSub] = useState("");
   const [isDropdownOpenSub, setIsDropdownOpenSub] = useState(false);
 
@@ -301,8 +384,7 @@ export const Visor = () => {
       feature = municipios.features.find(
         (feat) => feat.properties.MPIO_CNMBR === search
       );
-    }
-    else{
+    } else {
       setSearchTermSub(search);
       setIsDropdownOpenSub(false);
       feature = subregiones.features.find(
@@ -408,7 +490,10 @@ export const Visor = () => {
       </div>
       <div className="fixed z-[500] h-[100vh] w-[500px] flex justify-center items-start">
         <div
-          onClick={() => {setIsDropdownOpen(false); setIsDropdownOpenSub(false)}}
+          onClick={() => {
+            setIsDropdownOpen(false);
+            setIsDropdownOpenSub(false);
+          }}
           className="h-[95vh] w-[470px] bg-white opacity-90 rounded-[10px] mt-[15px] flex flex-col"
         >
           <div className="w-full h-[15%] flex flex-col items-center justify-center text-center">
@@ -438,11 +523,158 @@ export const Visor = () => {
               </nav>
               <div>
                 {currentCategory === "Avenidas Torrenciales" &&
-                  itemsVisorCategory.map((item, index) => (
-                    <details key={index} className="w-full group">
+                  itemsVisorCategory.length > 0 &&
+                  itemsVisorCategory.map((item, index) => {
+                    if (item.category !== "at") return null;
+                    return (
+                      <details key={index} className="w-full group">
+                        <summary className="cursor-pointer relative flex justify-center items-center h-[30px] w-full py-[25px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
+                          <h2 className="text-[2rem] font-bold text-center">
+                            {item.title}
+                          </h2>
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
+                            +
+                          </span>
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform hidden group-open:inline">
+                            -
+                          </span>
+                        </summary>
+                        <div className="w-full h-full border-b-[2px] pb-[10px]">
+                          <p className="text-[1.7rem] font-medium text-justify mt-4 px-10">
+                            {item.description}
+                          </p>
+                          <div className="w-full flex flex-row justify-center items-center my-10">
+                            <div
+                              className="flex items-center relative mr-10"
+                              onClick={() => handleCheckChange(index)}
+                            >
+                              <input
+                                id="slider"
+                                type="checkbox"
+                                checked={checks[index].check}
+                                onChange={() => {}}
+                                className="w-[37px] h-8 bg-gray-300 rounded-full appearance-none cursor-pointer peer"
+                              />
+                              <span
+                                className={`w-8 h-8 bg-white rounded-full transition-transform duration-300 ease-in-out absolute left-0 top-0 peer-checked:translate-x-6 peer-checked:bg-primary1 border peer-checked:border-none`}
+                              ></span>
+                            </div>
+                            <div className="flex flex-row items-center justify-center">
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={transps[index].transp}
+                                onChange={(e) => handleOpacityChange(e, index)}
+                                className="w-full h-6 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                              />
+                              <span className="text-[1.5rem] font-semibold text-gray-700 ml-4">
+                                Opacidad:{transps[index].transp}%
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-start w-full px-[25px] mb-4">
+                            <p className="text-[1.5rem]">Se clasifica en:</p>
+                            {item.legend.map((legend, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-center"
+                              >
+                                <div
+                                  className="w-8 h-6 mr-2 border border-black"
+                                  style={{ backgroundColor: legend.color }}
+                                ></div>
+                                <p className="text-[1.5rem]">{legend.value}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </details>
+                    );
+                  })}
+              </div>
+              <div>
+                {currentCategory === "Movimientos en Masa" ? (
+                  <>
+                    {itemsVisorCategory.length > 0 &&
+                      itemsVisorCategory.map((item, index) => {
+                        if (item.category !== "menm") return null;
+                        return (
+                          <details key={index} className="w-full group">
+                            <summary className="cursor-pointer relative flex justify-center items-center h-[30px] w-full py-[25px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
+                              <h2 className="text-[2rem] font-bold text-center">
+                                {item.title}
+                              </h2>
+                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
+                                +
+                              </span>
+                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform hidden group-open:inline">
+                                -
+                              </span>
+                            </summary>
+                            <div className="w-full h-full border-b-[2px] pb-[10px]">
+                              <p className="text-[1.7rem] font-medium text-justify mt-4 px-10">
+                                {item.description}
+                              </p>
+                              <div className="w-full flex flex-row justify-center items-center my-10">
+                                <div
+                                  className="flex items-center relative mr-10"
+                                  onClick={() => handleCheckChange(index)}
+                                >
+                                  <input
+                                    id="slider"
+                                    type="checkbox"
+                                    checked={checks[index].check}
+                                    onChange={() => {}}
+                                    className="w-[37px] h-8 bg-gray-300 rounded-full appearance-none cursor-pointer peer"
+                                  />
+                                  <span
+                                    className={`w-8 h-8 bg-white rounded-full transition-transform duration-300 ease-in-out absolute left-0 top-0 peer-checked:translate-x-6 peer-checked:bg-primary1 border peer-checked:border-none`}
+                                  ></span>
+                                </div>
+                                <div className="flex flex-row items-center justify-center">
+                                  <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={transps[index].transp}
+                                    onChange={(e) =>
+                                      handleOpacityChange(e, index)
+                                    }
+                                    className="w-full h-6 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                                  />
+                                  <span className="text-[1.5rem] font-semibold text-gray-700 ml-4">
+                                    Opacidad:{transps[index].transp}%
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex flex-col items-start w-full px-[25px] mb-4">
+                                <p className="text-[1.5rem]">
+                                  Se clasifica en:
+                                </p>
+                                {item.legend.map((legend, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-center justify-center"
+                                  >
+                                    <div
+                                      className="w-8 h-6 mr-2 border border-black"
+                                      style={{ backgroundColor: legend.color }}
+                                    ></div>
+                                    <p className="text-[1.5rem]">
+                                      {legend.value}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </details>
+                        );
+                      })}
+                    <details key={"inventario"} className="w-full group">
                       <summary className="cursor-pointer relative flex justify-center items-center h-[30px] w-full py-[25px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
                         <h2 className="text-[2rem] font-bold text-center">
-                          {item.title}
+                          {"Inventario de Eventos"}
                         </h2>
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
                           +
@@ -453,71 +685,50 @@ export const Visor = () => {
                       </summary>
                       <div className="w-full h-full border-b-[2px] pb-[10px]">
                         <p className="text-[1.7rem] font-medium text-justify mt-4 px-10">
-                          {item.description}
+                          {
+                            "Recopilación de eventos morfodinámicos en Antioquia."
+                          }
                         </p>
-                        <div className="w-full flex flex-row justify-center items-center my-10">
-                          <div
-                            className="flex items-center relative mr-10"
-                            onClick={() => handleCheckChange(index)}
-                          >
-                            <input
-                              id="slider"
-                              type="checkbox"
-                              checked={checks[index].check}
-                              onChange={() => {}}
-                              className="w-[37px] h-8 bg-gray-300 rounded-full appearance-none cursor-pointer peer"
-                            />
-                            <span
-                              className={`w-8 h-8 bg-white rounded-full transition-transform duration-300 ease-in-out absolute left-0 top-0 peer-checked:translate-x-6 peer-checked:bg-primary1 border peer-checked:border-none`}
-                            ></span>
-                          </div>
-                          <div className="flex flex-row items-center justify-center">
-                            <input
-                              type="range"
-                              min="0"
-                              max="100"
-                              value={transps[index].transp}
-                              onChange={(e) => handleOpacityChange(e, index)}
-                              className="w-full h-6 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                            />
-                            <span className="text-[1.5rem] font-semibold text-gray-700 ml-4">
-                              Opacidad:{transps[index].transp}%
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-start w-full px-[25px] mb-4">
-                          <p className="text-[1.5rem]">Se clasifica en:</p>
-                          {item.legend.map((legend, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-center"
-                            >
-                              <div
-                                className="w-8 h-6 mr-2 border border-black"
-                                style={{ backgroundColor: legend.color }}
-                              ></div>
-                              <p className="text-[1.5rem]">{legend.value}</p>
-                            </div>
-                          ))}
-                        </div>
                       </div>
                     </details>
-                    // <div
-                    //   key={index}
-                    //   className="flex flex-col items-center p-2 border-b cursor-pointer"
-                    //   onClick={() => setCurrentItem(item.title)}
-                    // >
-                    //   <h3 className="text-[2rem] font-bold text-center">
-                    //     {item.title}
-                    //   </h3>
-                    //   {currentItem === item.title &&
-                    //     itemsLayerMap.current.length > 0 && (
-                    //       <>
-
-                    //       </>
-                    //     )}
-                    // </div>
-                  ))}
+                    <details key={"umbrales"} className="w-full group">
+                      <summary className="cursor-pointer relative flex justify-center items-center h-[30px] w-full py-[25px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
+                        <h2 className="text-[2rem] font-bold text-center">
+                          {"Umbrales de Lluvia"}
+                        </h2>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
+                          +
+                        </span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform hidden group-open:inline">
+                          -
+                        </span>
+                      </summary>
+                      <div className="w-full h-full border-b-[2px] pb-[10px]">
+                        <p className="text-[1.7rem] font-medium text-justify mt-4 px-10">
+                          {
+                            "Umbrales de intensidad mínima para la ocurrencia de deslizamientos."
+                          }
+                        </p>
+                        <label className="ml-[25px] text-[1.3rem]">Seleccione la Subregión: </label>
+                        <select
+                          name="subre"
+                          id="subre"
+                          className="!w-[156px] h-[36px] text-[1.3rem] font-normal rounded-[6px] border-[1px] bg-white"
+                          onChange={(e) => {
+                            setSubregionGraph(e.target.value);
+                          }}
+                        >
+                          {subregionArray.map((subregion, index) => (
+                            <option key={"subs_" + index} value={subregion}>
+                              {subregion}
+                            </option>
+                          ))}
+                        </select>
+                        <button className="ml-[15px] h-[36px] py-[10px] px-[15px] text-white text-[1.2rem] font-semibold bg-secondary1 rounded-[6px]">Ver Gráfica</button>
+                      </div>
+                    </details>
+                  </>
+                ) : null}
               </div>
             </div>
             <div>
@@ -537,7 +748,10 @@ export const Visor = () => {
       </div>
 
       <div
-        onClick={() => {setIsDropdownOpen(false); setIsDropdownOpenSub(false)}}
+        onClick={() => {
+          setIsDropdownOpen(false);
+          setIsDropdownOpenSub(false);
+        }}
         id="map"
         style={{ height: "100vh", width: "100vw" }}
       ></div>

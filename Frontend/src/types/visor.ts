@@ -7,6 +7,7 @@ export type legendType = {
 export type itemsVisorCategoryType = {
     title: string;
     description: string;
+    category: string;
     url: string;
     urlFeat: string;
     legend: legendType[];

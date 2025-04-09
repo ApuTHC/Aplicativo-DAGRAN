@@ -6,6 +6,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     {
         title: "Susceptibilidad",
         description: "Susceptible indica la probabilidad que algo suceda, está vinculado a aquello capaz de ser modificado o de recibir impresión por algo.",
+        category: "at",
         url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad/MapServer",
         urlFeat: "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad/FeatureServer/0",
         legend: [
@@ -26,6 +27,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     {
         title: "Vulnerabilidad",
         description: "Vulnerabilidad es la susceptibilidad o fragilidad física, económica, social, ambiental o institucional que tiene una comunidad de ser afectada o de sufrir efectos adversos en caso de que un evento físico peligroso se presente.",
+        category: "at",
         url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Vunerabilidad/MapServer",
         urlFeat: "",
         legend: [
@@ -58,6 +60,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     {
         title: "Amenaza",
         description: "Amenaza es el peligro inminente, que surge, de un hecho o acontecimiento que aún no ha sucedido, pero que de concretarse aquello que se dijo que iba a ocurrir, dicha circunstancia o hecho perjudicará a una o varias personas en particular.",
+        category: "at",
         url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Amenaza/MapServer",
         urlFeat: "",
         legend: [
@@ -82,6 +85,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     {
         title: "Riesgo",
         description: "El riesgo es la posibilidad de que una amenaza cause daños estructurales, naturales y socioeconómicos. ",
+        category: "at",
         url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo/MapServer",
         urlFeat: "",
         legend: [
@@ -100,6 +104,56 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
             {
                 value: "No Aplica",
                 color:"#e0e0e0"
+            },
+        ]
+    },
+    {
+        title: "Susceptibilidad",
+        description: "Susceptible indica la probabilidad que algo suceda, está vinculado a aquello capaz de ser modificado o de recibir impresión por algo.",
+        category:"menm",
+        url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM/MapServer",
+        urlFeat: "",
+        legend: [
+            {
+                value: "Muy Bajo",
+                color:"#1a992e"
+            },
+            {
+                value: "Bajo",
+                color:"#87c734"
+            },
+            {
+                value: "Medio",
+                color:"#ffff00"
+            },
+            {
+                value: "Alto",
+                color:"#ffaa00"
+            },
+            {
+                value: "Muy Alto",
+                color:"#ff0000"
+            },
+        ]
+    },
+    {
+        title: "Riesgo",
+        description: "El riesgo es la posibilidad de que una amenaza cause daños estructurales, naturales y socioeconómicos. ",
+        category:"menm",
+        url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM/MapServer",
+        urlFeat: "",
+        legend: [
+            {
+                value: "Alto",
+                color:"#ff0000"
+            },
+            {
+                value: "Medio - Alto",
+                color:"#ffaa00"
+            },
+            {
+                value: "Medio",
+                color:"#ffff00"
             },
         ]
     },
