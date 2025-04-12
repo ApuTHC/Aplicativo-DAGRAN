@@ -13,5 +13,11 @@ export type itemsVisorCategoryType = {
     legend: legendType[];
 }
 
+export type subregionsGraphsType = {
+    id: number,
+    name: string,
+    url: string
+}
+
 
 
