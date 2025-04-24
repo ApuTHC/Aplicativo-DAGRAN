@@ -353,7 +353,9 @@ export const Visor = () => {
 
       // Uso
       const featureServerUrl =
-        "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
+        // "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Inventario_V_20_02_mun/FeatureServer/0";
+
 
       fetchFeatureServerGeoJSON(featureServerUrl).then(
         (geojson: GeoJSON.FeatureCollection) => {
@@ -409,6 +411,12 @@ export const Visor = () => {
                                     .categ,
                               },
                               {
+                                name: "Agrupación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .clusters,
+                              },
+                              {
                                 name: "Movimientos en el Inventario",
                                 value:
                                   featureCollection.features[0].properties
@@ -416,9 +424,150 @@ export const Visor = () => {
                               },
                               {
                                 name: "Movimientos Esperados (Predichos)",
+                                value: Number(parseFloat(featureCollection.features[0].properties.mm_esp).toFixed(3)),
+                              },
+                              {
+                                name: "Residual",
+                                value:
+                                  Number(parseFloat(featureCollection.features[0].properties.dif).toFixed(3)),
+                              },
+                              {
+                                name: "Municipio",
                                 value:
                                   featureCollection.features[0].properties
-                                    .mm_esp,
+                                    .nom_mun,
+                              },
+                            ],
+                          });
+                          break;
+
+                        case "Fragilidad Socioeconómica":
+                          listaux.push({
+                            name: "Fragilidad Socioeconómica MenM",
+                            data: [
+                              {
+                                name: "Clasificación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Mapa1_recl,
+                              },
+                              {
+                                name: "Índice de fragilidad de unidad domestica",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .id_frado_c,
+                              },
+                              {
+                                name: "Índice de fragilidad de los medios de vida",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .id_frame_c,
+                              },
+                              {
+                                name: "Índice de fragilidad de las condiciones de productividad",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .id_fropr_c,
+                              },
+                              {
+                                name: "Índice de fragilidad de en términos de asociatividad",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .id_freas_c,
+                              },
+                              {
+                                name: "Municipio",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .nom_mun,
+                              },
+                            ],
+                          });
+                          break;
+
+                        case "Costo Daño":
+                          listaux.push({
+                            name: "Costo Daño MenM",
+                            data: [
+                              {
+                                name: "Clasificación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Mapa2_recl,
+                              },
+                              {
+                                name: "Presupuesto municipal",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .pre_mun_p,
+                              },
+                              {
+                                name: "Costo del daño estructural",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Cos_v_cla,
+                              },
+                              {
+                                name: "Porcentaje de daño de la unidad de ladera respecto al presupuesto municipal",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .daño_por + "%",
+                              },
+                              {
+                                name: "Personas DANE redistribuidas",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .per_dane_r,
+                              },
+                              {
+                                name: "Viviendas  DANE redistribuidas",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .viv_dane_r,
+                              },
+                              {
+                                name: "Daño de personas",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .daño_pe_r,
+                              },
+                              {
+                                name: "Vulnerabilidad estructural",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .vul_fis_cl,
+                              },
+                              {
+                                name: "Municipio",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .nom_mun,
+                              },
+                            ],
+                          });
+                          break;
+
+                        case "Capacidad Institucional":
+                          listaux.push({
+                            name: "Capacidad Institucional MenM",
+                            data: [
+                              {
+                                name: "Clasificación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Mapa3_recl,
+                              },
+                              {
+                                name: "Índicador capacidad Político Institucional",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .cor_eje__1,
+                              },
+                              {
+                                name: "Índicador capacidades municipales para el proceso de manejo de desastres",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Manejo_aj_,
                               },
                               {
                                 name: "Municipio",
@@ -441,33 +590,22 @@ export const Visor = () => {
                                     .RIESGO_rec,
                               },
                               {
+                                name: "Agrupación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .Cluster,
+                              },
+                              {
+                                name: "Descripción Agrupación",
+                                value:
+                                  featureCollection.features[0].properties
+                                    .cluster_c,
+                              },
+                              {
                                 name: "Municipio",
                                 value:
                                   featureCollection.features[0].properties
                                     .nom_mun,
-                              },
-                            ],
-                          });
-                          break;
-
-                        case "Fragilidad Socioeconómica":
-                          listaux.push({
-                            name: "Fragilidad Socioeconómica MenM",
-                            data: [
-                              {
-                                name: "Clasificación",
-                                value:
-                                  featureCollection.features[0].properties.Mapa1_recl,
-                              },
-                              {
-                                name: "Índice de Fragilidad Domestica", 
-                                value:
-                                  featureCollection.features[0].properties.Ind_frado,
-                              },
-                              {
-                                name: "Municipio",
-                                value:
-                                  featureCollection.features[0].properties.nom_mun,
                               },
                             ],
                           });
@@ -874,6 +1012,47 @@ export const Visor = () => {
               <div>
                 {currentCategory === "Movimientos en Masa" ? (
                   <>
+                    <details key={"inventario"} className="w-full group">
+                      <summary className="cursor-pointer relative flex justify-center items-center h-[20px] w-full py-[20px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
+                        <h2 className="text-[1.6rem] font-bold text-center">
+                          {"Inventario de Eventos"}
+                        </h2>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
+                          +
+                        </span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform hidden group-open:inline">
+                          -
+                        </span>
+                      </summary>
+                      <div className="w-full h-full border-b-[2px] pb-[10px]">
+                        <p className="text-[1.4rem] font-medium text-justify mt-4 px-10">
+                          {
+                            "Recopilación de eventos morfodinámicos en Antioquia."
+                          }
+                        </p>
+                        <div className="w-full flex flex-row justify-center items-center my-10">
+                          <label className="mr-[5px] text-[1.3rem] font-medium">
+                            Inventario Antioquia:{" "}
+                          </label>
+                          <div
+                            className="flex items-center relative mr-10"
+                            onClick={() => handleInvCheckChange()}
+                          >
+                            <input
+                              id="slider"
+                              type="checkbox"
+                              checked={checkInv}
+                              onChange={() => {}}
+                              className="w-[37px] h-8 bg-gray-300 rounded-full appearance-none cursor-pointer peer"
+                            />
+                            <span
+                              className={`w-8 h-8 bg-white rounded-full transition-transform duration-300 ease-in-out absolute cursor-pointer left-0 top-0 peer-checked:translate-x-6 peer-checked:bg-primary1 border peer-checked:border-none`}
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+
                     {itemsVisorCategory.length > 0 &&
                       itemsVisorCategory.map((item, index) => {
                         if (item.category !== "menm") return null;
@@ -950,50 +1129,10 @@ export const Visor = () => {
                         );
                       })}
 
-                    <details key={"inventario"} className="w-full group">
-                      <summary className="cursor-pointer relative flex justify-center items-center h-[20px] w-full py-[20px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
-                        <h2 className="text-[1.6rem] font-bold text-center">
-                          {"Inventario de Eventos"}
-                        </h2>
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
-                          +
-                        </span>
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform hidden group-open:inline">
-                          -
-                        </span>
-                      </summary>
-                      <div className="w-full h-full border-b-[2px] pb-[10px]">
-                        <p className="text-[1.4rem] font-medium text-justify mt-4 px-10">
-                          {
-                            "Recopilación de eventos morfodinámicos en Antioquia."
-                          }
-                        </p>
-                        <div className="w-full flex flex-row justify-center items-center my-10">
-                          <label className="mr-[5px] text-[1.3rem] font-medium">Inventario Antioquia: </label>
-                          <div
-                            className="flex items-center relative mr-10"
-                            onClick={() => handleInvCheckChange()}
-                          >
-                            <input
-                              id="slider"
-                              type="checkbox"
-                              checked={checkInv}
-                              onChange={() => {}}
-                              className="w-[37px] h-8 bg-gray-300 rounded-full appearance-none cursor-pointer peer"
-                            />
-                            <span
-                              className={`w-8 h-8 bg-white rounded-full transition-transform duration-300 ease-in-out absolute cursor-pointer left-0 top-0 peer-checked:translate-x-6 peer-checked:bg-primary1 border peer-checked:border-none`}
-                            ></span>
-                          </div>
-                        </div>
-                      </div>
-                    </details>
-                    
-
                     <details key={"umbrales"} className="w-full group">
                       <summary className="cursor-pointer relative flex justify-center items-center h-[30px] w-full py-[25px] bg-white text-[1.4rem] font-medium leading-[13px] border-b-[2px] group-open:border-b-0">
                         <h2 className="text-[1.6rem] font-bold text-center">
-                          {"Umbrales de Lluvia"}
+                          {"Amenaza"}
                         </h2>
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.6rem] font-bold transition-transform group-open:hidden">
                           +
@@ -1040,7 +1179,8 @@ export const Visor = () => {
                         {item.data.map((data, index) => {
                           return (
                             <p key={index} className="text-[1.2rem]">
-                              <span className="font-semibold">{data.name}</span>: {data.value}
+                              <span className="font-semibold">{data.name}</span>
+                              : {data.value}
                             </p>
                           );
                         })}
@@ -1091,7 +1231,7 @@ export const Visor = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b-[2px] border-solid border-primary2 rounded-t">
                   <h3 className="text-black text-[1.4rem] font-semibold">
-                    Gráficos de Umbrales de Lluvia
+                    Amenaza
                   </h3>
                   <button
                     className="mr-[10px]"

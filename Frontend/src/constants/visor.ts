@@ -125,7 +125,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM_SHP/FeatureServer/4",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM_SHP_1/FeatureServer/0",
     legend: [
       {
         value: "Muy Bajo",
@@ -149,29 +149,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
       },
     ],
   },
-  {
-    title: "Riesgo",
-    description:
-      "El riesgo es la posibilidad de que una amenaza cause daños estructurales, naturales y socioeconómicos. ",
-    category: "menm",
-    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM/MapServer",
-    urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM_SHP/FeatureServer/3",
-    legend: [
-      {
-        value: "Alto",
-        color: "#ff0000",
-      },
-      {
-        value: "Medio - Alto",
-        color: "#ffaa00",
-      },
-      {
-        value: "Medio",
-        color: "#ffff00",
-      },
-    ],
-  },
+  
   {
     title: "Fragilidad Socioeconómica",
     description:
@@ -179,7 +157,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Fragilidad_socioecon%C3%B3mica/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Fragilidad_socioeconómica_SHP/FeatureServer/0",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Fragilidad_socioeconómica/FeatureServer/0",
     legend: [
       {
         value: "Muy alto",
@@ -210,7 +188,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Costo_da%C3%B1o/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Costo_daño_SHP/FeatureServer/0",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Costo_daño_SHP_1/FeatureServer/0",
     legend: [
       {
         value: "Medio - alto",
@@ -237,7 +215,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Capacidad_institucional/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Capacidad_institucional_SHP/FeatureServer/0",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Capacidad_institucional/FeatureServer/0",
     legend: [
       {
         value: "Baja",
@@ -250,6 +228,29 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
       {
         value: "Medio - alto",
         color: "#ffaa00",
+      },
+    ],
+  },
+  {
+    title: "Riesgo",
+    description:
+      "El riesgo es la posibilidad de que una amenaza cause daños estructurales, naturales y socioeconómicos. ",
+    category: "menm",
+    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM/MapServer",
+    urlFeat:
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM_SHP_1/FeatureServer/0",
+    legend: [
+      {
+        value: "Alto",
+        color: "#ff0000",
+      },
+      {
+        value: "Medio - Alto",
+        color: "#ffaa00",
+      },
+      {
+        value: "Medio",
+        color: "#ffff00",
       },
     ],
   },
