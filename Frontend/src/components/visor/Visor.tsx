@@ -558,13 +558,13 @@ export const Visor = () => {
                                     .Mapa3_recl,
                               },
                               {
-                                name: "Índicador capacidad Político Institucional",
+                                name: "Índice capacidad Político Institucional",
                                 value:
                                   featureCollection.features[0].properties
                                     .cor_eje__1,
                               },
                               {
-                                name: "Índicador capacidades municipales para el proceso de manejo de desastres",
+                                name: "Índice capacidades municipales para el proceso de manejo de desastres",
                                 value:
                                   featureCollection.features[0].properties
                                     .Manejo_aj_,
