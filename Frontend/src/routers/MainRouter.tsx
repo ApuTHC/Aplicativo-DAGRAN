@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { parentRoutes } from "../constants/routes";
 import { VisorView } from "../views/VisorView";
 
 export const MainRouter = () => {
  
     return (
-      <BrowserRouter>
+      <BrowserRouter basename="/Aplicativo-DAGRAN">
         <Routes>
           {/* Public Paths */}
           <Route
@@ -14,7 +14,7 @@ export const MainRouter = () => {
             <Route index element={<VisorView />} />
           </Route>
 
-          {/* <Route path="*" element={<Navigate to={parentRoutes.NOTFOUND} replace />} /> */}
+          <Route path="*" element={<Navigate to={parentRoutes.NOTFOUND} replace />} />
         </Routes>
       </BrowserRouter>
     );
