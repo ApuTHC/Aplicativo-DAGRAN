@@ -356,9 +356,9 @@ export const Visor = () => {
 
       // Uso
       const featureServerUrl =
-      "https://www.medellin.gov.co/servidormapas/rest/services/mapas_nacionales/VC_Catastro/MapServer/1";
+      // "https://www.medellin.gov.co/servidormapas/rest/services/mapas_nacionales/VC_Catastro/MapServer/1";
       // "https://www.medellin.gov.co/servidormapas/rest/services/mapas_nacionales/VC_Infraestructura_Fisica/MapServer/0";
-      // "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
         // "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Inventario_V_20_02_mun/FeatureServer/0";
 
 
