@@ -17,7 +17,7 @@ import * as Locate from "leaflet.locatecontrol";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import { municipios } from "../../constants/municipios";
 import { subregiones } from "../../constants/subregiones";
-import * as d3 from "d3";
+// import * as d3 from "d3";
 
 export const Visor = () => {
   type ToggleLayerType = () => void;
@@ -29,7 +29,7 @@ export const Visor = () => {
     // Limpiar cualquier path previo en el clipPath
     clipPath.selectAll("*").remove();
 
-    const coords = geojson.geometry.coordinates[0][0];
+    const coords = (geojson.geometry as any).coordinates[0][0];
     const latLngs = coords.map((coord: number[]) =>
       map.current?.latLngToLayerPoint([coord[1], coord[0]])
     );
@@ -164,7 +164,7 @@ export const Visor = () => {
     type: string,
     field: string
   ) => {
-    const feats = [];
+    const feats: any[] = [];
 
     geojson.features.map((feat) => {
       if (feat.properties) {
@@ -335,12 +335,15 @@ export const Visor = () => {
         const features = [];
         let hasMoreData = true;
 
+        console.log("llamado");
+
         while (hasMoreData) {
           const queryUrl = `${url}/query?where=1%3D1&outFields=*&f=geojson&resultOffset=${offset}&resultRecordCount=${recordCount}`;
           const response = await fetch(queryUrl);
           const data = await response.json();
 
           if (data.features && data.features.length > 0) {
+            console.log("data.features.length", data.features.length);
             features.push(...data.features);
             offset += recordCount;
           } else {
@@ -353,13 +356,15 @@ export const Visor = () => {
 
       // Uso
       const featureServerUrl =
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
+      "https://www.medellin.gov.co/servidormapas/rest/services/mapas_nacionales/VC_Catastro/MapServer/1";
+      // "https://www.medellin.gov.co/servidormapas/rest/services/mapas_nacionales/VC_Infraestructura_Fisica/MapServer/0";
+      // "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/inventario/FeatureServer/0";
         // "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Inventario_V_20_02_mun/FeatureServer/0";
 
 
       fetchFeatureServerGeoJSON(featureServerUrl).then(
         (geojson: GeoJSON.FeatureCollection) => {
-          // console.log(geojson); // Agrega el GeoJSON al mapa o guárdalo
+          console.log(geojson); // Agrega el GeoJSON al mapa o guárdalo
           setInventario(geojson);
 
           buildInvLayer(geojson, "all", "");
@@ -408,7 +413,7 @@ export const Visor = () => {
                                 name: "Clasificación",
                                 value:
                                   featureCollection.features[0].properties
-                                    .categ,
+                                    .Mapa4_clas,
                               },
                               {
                                 name: "Agrupación",
@@ -587,19 +592,19 @@ export const Visor = () => {
                                 name: "Clasificación",
                                 value:
                                   featureCollection.features[0].properties
-                                    .RIESGO_rec,
+                                    .RIESG_clas,
                               },
                               {
                                 name: "Agrupación",
                                 value:
                                   featureCollection.features[0].properties
-                                    .Cluster,
+                                    .cluster_F,
                               },
                               {
                                 name: "Descripción Agrupación",
                                 value:
                                   featureCollection.features[0].properties
-                                    .cluster_c,
+                                    .c_descrip,
                               },
                               {
                                 name: "Municipio",

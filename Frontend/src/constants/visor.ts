@@ -118,42 +118,41 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
       },
     ],
   },
+
   {
     title: "Susceptibilidad",
     description:
       "Susceptible indica la probabilidad que algo suceda, está vinculado a aquello capaz de ser modificado o de recibir impresión por algo.",
     category: "menm",
-    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM/MapServer",
+    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_menm_nueva_1/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_MenM_SHP_1/FeatureServer/0",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Susceptibilidad_menm_nueva/FeatureServer/0",
     legend: [
       {
         value: "Muy Bajo",
-        color: "#1a992e",
+        color: "#b0e000",
       },
       {
         value: "Bajo",
-        color: "#87c734",
-      },
-      {
-        value: "Medio",
         color: "#ffff00",
       },
       {
-        value: "Alto",
+        value: "Medio",
         color: "#ffaa00",
       },
       {
-        value: "Muy Alto",
+        value: "Alto",
         color: "#ff0000",
+      },
+      {
+        value: "Muy Alto",
+        color: "#a900e6",
       },
     ],
   },
-  
   {
     title: "Fragilidad Socioeconómica",
-    description:
-      "",
+    description: "",
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Fragilidad_socioecon%C3%B3mica/MapServer",
     urlFeat:
@@ -183,8 +182,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
   },
   {
     title: "Costo Daño",
-    description:
-      "",
+    description: "",
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Costo_da%C3%B1o/MapServer",
     urlFeat:
@@ -210,8 +208,7 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
   },
   {
     title: "Capacidad Institucional",
-    description:
-      "",
+    description: "",
     category: "menm",
     url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Capacidad_institucional/MapServer",
     urlFeat:
@@ -236,21 +233,29 @@ export const itemsVisorCategory: itemsVisorCategoryType[] = [
     description:
       "El riesgo es la posibilidad de que una amenaza cause daños estructurales, naturales y socioeconómicos. ",
     category: "menm",
-    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM/MapServer",
+    url: "https://tiles.arcgis.com/tiles/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_menm_nueva_2/MapServer",
     urlFeat:
-      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_MenM_SHP_1/FeatureServer/0",
+      "https://services7.arcgis.com/gTVMpnerZFjZtXQb/arcgis/rest/services/Riesgo_menm_nueva/FeatureServer/0",
     legend: [
+      {
+        value: "Muy Alto",
+        color: "#a80000",
+      },
       {
         value: "Alto",
         color: "#ff0000",
       },
       {
-        value: "Medio - Alto",
-        color: "#ffaa00",
-      },
-      {
         value: "Medio",
         color: "#ffff00",
+      },
+      {
+        value: "Bajo",
+        color: "#87c734",
+      },
+      {
+        value: "Muy Bajo",
+        color: "#1a992e",
       },
     ],
   },
@@ -264,3 +269,4 @@ export const subregionsGraphs: subregionsGraphsType[] = [
   { id: 4, name: "Sureste", url: "graphs/Sureste_90d.png" },
   { id: 5, name: "Bajo cauca", url: "graphs/Bajo cauca_90d.png" },
 ];
+

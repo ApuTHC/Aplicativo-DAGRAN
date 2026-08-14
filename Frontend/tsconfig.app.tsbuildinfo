@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/visor/visor.tsx","./src/constants/municipios.ts","./src/constants/routes.ts","./src/constants/subregiones.ts","./src/constants/visor.ts","./src/routers/mainrouter.tsx","./src/types/esri-leaflet-legend.d.ts","./src/types/visor.ts","./src/views/visorview.tsx"],"errors":true,"version":"5.6.3"}
