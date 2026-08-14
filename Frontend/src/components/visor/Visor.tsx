@@ -17,7 +17,7 @@ import * as Locate from "leaflet.locatecontrol";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import { municipios } from "../../constants/municipios";
 import { subregiones } from "../../constants/subregiones";
-// import * as d3 from "d3";
+import * as d3 from "d3";
 
 export const Visor = () => {
   type ToggleLayerType = () => void;
